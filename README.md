@@ -16,9 +16,7 @@ El proyecto consiste en diseñar y construir un modelo de montacargas funcional 
 El sistema cuenta con una interfaz de usuario que consta de tres botones: uno para subir pisos, otro para bajar pisos y otro para detener el montacargas. También se incluyen dos LEDs, uno verde que indica cuando el montacargas está en movimiento y otro rojo que indica cuando el montacargas está pausado. El display de 7 segmentos se utiliza para mostrar en tiempo real en qué piso se encuentra el montacargas.
 
 ## Funciones principales
-Esta funcion se encarga de encender leds del 7 segmentos.
-
-A, B, C, D, E, F, G son #define que utilizamos para conectar el display, asociandolo a pines de la placa arduino.
+Estas funciones se encargan de encender y apagar los leds del 7 segmentos.
 
 PrendeLed: Se pasa por parametro el pin que desea ser encendido y se pone en 0 el que no.
 ApagarLeds: Apaga los leds del display 7 segmentos
