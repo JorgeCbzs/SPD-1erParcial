@@ -1,0 +1,195 @@
+//Cabezas Franco Jorge Luis
+#define A 5
+#define B 4
+#define C A3
+#define D A4
+#define E A5
+#define F 6
+#define G 7
+
+#define PULSADOR_SUBIDA 12
+#define PULSADOR_BAJADA 10
+#define PULSADOR_PAUSA 11
+
+#define LED_ROJO 9
+#define LED_VERDE 8
+
+void apagarLeds();
+void prendeLed(int pin1, int pin2, int pin3, int pin4, int pin5, int pin6, int pin7);
+void mostrarPisoSerial(int pisoActual);
+
+int contadorPisos = 0;
+
+unsigned long tiempoAnterior = 0;
+int tiempoEspera = 3000; // Intervalo de tiempo entre pisos (3 segundos)
+
+int flagSubida = 0;
+int flagPausa = 0;
+int flagBajada = 0;
+
+void setup() {
+  for (int i = 4; i <= 11; i++){
+    pinMode(i, OUTPUT);
+  }
+  pinMode(PULSADOR_SUBIDA, INPUT_PULLUP);
+  pinMode(PULSADOR_PAUSA, INPUT_PULLUP);
+  pinMode(PULSADOR_BAJADA, INPUT_PULLUP);
+  pinMode(C, OUTPUT);
+  pinMode(D, OUTPUT);
+  pinMode(E, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int estadoPulsadorSubida = digitalRead(PULSADOR_SUBIDA);
+  int estadoPulsadorBajada = digitalRead(PULSADOR_BAJADA);
+  int estadoPulsadorPausa = digitalRead(PULSADOR_PAUSA);
+  
+  if (estadoPulsadorSubida == LOW) {
+  	if (!flagBajada) {
+      flagSubida = 1;
+      digitalWrite(LED_VERDE, HIGH);
+    }
+  }
+  
+  if (estadoPulsadorBajada == LOW) {
+  	if (!flagSubida) {
+      flagBajada = 1;
+      digitalWrite(LED_VERDE, HIGH);
+    }
+  }
+  
+  if (estadoPulsadorPausa == LOW){
+    flagPausa = 1;
+  }
+  
+  if (flagSubida == 1) 
+  {
+    digitalWrite(LED_ROJO, LOW);
+    unsigned long tiempoActual = millis();
+    if (tiempoActual - tiempoAnterior >= tiempoEspera)
+    {
+      if (contadorPisos < 9)
+      {
+        contadorPisos++;
+        Serial.println("SUBIENDO...");
+        mostrarPisoSerial(contadorPisos);
+      }
+      else
+      {
+        Serial.println("NO SE PUEDE SUBIR MAS.");
+        flagPausa = 1;
+      }
+      tiempoAnterior = tiempoActual;
+    }
+  }
+  
+  if (flagBajada == 1) 
+  {
+    digitalWrite(LED_ROJO, LOW);
+    unsigned long tiempoActual = millis();
+    if (tiempoActual - tiempoAnterior >= tiempoEspera)
+    {
+      if (contadorPisos > 0)
+      {
+        contadorPisos--;
+        Serial.println("BAJANDO...");
+        mostrarPisoSerial(contadorPisos);
+      }
+      else
+      {
+        Serial.println("NO SE PUEDE BAJAR MAS.");
+        flagPausa = 1;
+      }
+      tiempoAnterior = tiempoActual;
+    }     
+  }
+  
+  if (flagPausa == 1)
+  {
+    Serial.println("DETENIDO");
+    mostrarPisoSerial(contadorPisos);
+    digitalWrite(LED_ROJO, HIGH);
+    flagSubida = 0;
+    flagBajada = 0;
+    digitalWrite(LED_VERDE, LOW);
+    flagPausa = 0;
+  }
+
+  switch (contadorPisos) {
+      case 0:
+      apagarLeds();
+      prendeLed(A,B,C,D,E,F,0);
+      break;
+      
+      case 1:
+      apagarLeds();
+      prendeLed(0,B,C,0,0,0,0);
+      break;
+      
+      case 2:
+      apagarLeds();
+      prendeLed(A,B,0,D,E,0,G);
+      break;
+      
+      case 3:
+      apagarLeds();    
+      prendeLed(A,B,C,D,0,0,G);
+      break;
+      
+      case 4:
+      apagarLeds();
+      prendeLed(0,B,C,0,0,F,G);
+      break;
+      
+      case 5:
+      apagarLeds();
+      prendeLed(A,0,C,D,0,F,G);
+      break;
+      
+      case 6:
+      apagarLeds();
+      prendeLed(A,0,C,D,E,F,G);
+      break;
+      
+      case 7:
+      apagarLeds();
+      prendeLed(A,B,C,0,0,0,0);
+      break;
+      
+      case 8:
+      apagarLeds();
+      prendeLed(A,B,C,D,E,F,G);
+      break;
+      
+      case 9:
+      apagarLeds();
+      prendeLed(A,B,C,0,0,F,G);
+      break;
+  }
+}
+
+
+void mostrarPisoSerial(int pisoActual){
+  Serial.print("El piso en el que se encuentra es: ");
+  Serial.println(pisoActual);
+}
+
+void apagarLeds() {
+  for (int i = 4; i <= 7; i++) {
+    digitalWrite(i, LOW);
+  }
+  digitalWrite(C, LOW);
+  digitalWrite(D, LOW);
+  digitalWrite(E, LOW);
+}
+
+void prendeLed(int pin1, int pin2, int pin3, int pin4, int pin5, int pin6, int pin7) {
+  digitalWrite(pin1, HIGH);
+  digitalWrite(pin2, HIGH);
+  digitalWrite(pin3, HIGH);
+  digitalWrite(pin4, HIGH);
+  digitalWrite(pin5, HIGH);
+  digitalWrite(pin6, HIGH);
+  digitalWrite(pin7, HIGH);
+}
