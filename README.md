@@ -1,4 +1,4 @@
-# Montacargas 
+# Parcial SPD 
 ![Tinkercad](./img/ArduinoTinkercad.jpg)
 
 
@@ -6,7 +6,7 @@
 - Jorge L. Cabezas
 
 
-## Proyecto: Contador binario.
+## Proyecto: Montacargas.
 ![Tinkercad](./img/montacargas.png)
 
 
